@@ -6,96 +6,97 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import type {Node} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   useColorScheme,
-  View,
-  NativeModules
+  Vibration,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import { getApiData } from './services/api';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+import messaging from '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+import Navigator from './src/Navigation/navigator';
+import navigationService from './src/Navigation/navigationService';
 
-const App: () => Node = () => {
+const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const { CustomeModule } = NativeModules;
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  async function requestUserPermission() {
+    const authorizationStatus = await messaging().requestPermission();
+    if (authorizationStatus) {
+      console.log('Permission status:', authorizationStatus);
+    }
+  }
+  const [route, setRoute] = useState('Screen');
+  React.useEffect(() => {
+    requestUserPermission();
+    messaging()
+      .getToken()
+      .then(token => {
+        console.log(token);
+      });
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      if (remoteMessage.notification) {
+        console.log('===>2');
+        navigationService.navigate('Screen1');
+      }
+      // navigationService.navigate("Screen2");
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(value => {
+        console.log('Notification caused app to open from quit state:', value);
+        if (value != null) {
+          console.log('===>1');
+          setRoute('Screen2');
+        }
+      });
+
+    PushNotification.configure({
+      onNotification: function (notification) {
+        console.log('local notification', notification);
+        if (notification.foreground)
+          navigationService.navigate('Screen2');
+      },
+    });
+    messaging().onMessage(async remoteMessage => {
+      console.log("====>")
+      if (remoteMessage.hasOwnProperty('notification')) {
+        // Vibration.vibrate(50000)
+        // it will vibrate for 5 seconds
+        PushNotification.localNotification({
+          message: remoteMessage.notification.body,
+          title: remoteMessage.notification.title,
+          bigPictureUrl: remoteMessage.notification.android.imageUrl,
+          smallIcon: remoteMessage.notification.android.imageUrl,
+          soundName: 'bark',
+          playSound: true,
+          channelId: 'new_email_arrived_channel',
+        });
+      }
+    });
+  }, []);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <TouchableOpacity
-            onPress={() => {
-              CustomeModule.createEvent('testName', 'testLocation');
-            }}>
-              <Text>GET ALL DATA</Text>
-            </TouchableOpacity>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <SafeAreaProvider style={backgroundStyle}>
+      {/* <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} /> */}
+      <Navigator initialRoute={route} />
+    </SafeAreaProvider>
   );
 };
 
@@ -119,3 +120,18 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
+
+
+// curl --location --request POST 'https://fcm.googleapis.com/fcm/send' \
+// --header 'Authorization: Bearer AAAAP4oThQc:APA91bEy3uAAuTXkdIEh6ZqVGmUsDYkZv82lAnFIRkAzjaxyvSEruDmYQc9CFRQnn2g9Ql5VRWKhhHZRGdDgao1Ekz_NCgsOzlzMm4YYz2v9btFAgbqRJqUyLL9INg9dDE7BYb1pOT12' \
+// --header 'Content-Type: application/json' \
+// --data-raw '{
+//    "notification":{
+//      "title":"FCM Message",
+//      "body":"This is an FCM Message",
+//      "sound":"bark.mp3",
+//       "android_channel_id": "new_email_arrived_channel"
+//    },
+//    "to":"ezQDRqp6R6-UKFMMguuOiP:APA91bGz_p6abyBLBe_-CydpGwfRPNxOicdv2qDI0xIH3vFwNxJRsmVnz64B15evjxynqYomXyNvx_hOU4d6egEuaEiH2IygFJwVBI-bk2n6Ey3RdNYsQh08jjjuNgt6g4WPNwuB02MQ"
+// }'

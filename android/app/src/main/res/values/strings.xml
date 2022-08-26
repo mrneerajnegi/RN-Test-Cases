@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AwesomeProject</string>
+    <string name="default_notification_channel_id">ASASASSASASS</string>
+    <!-- <string name="google_api_key">{{Your Google maps API Key Here}}</string> -->
 </resources>

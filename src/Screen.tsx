@@ -1,23 +1,38 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  NativeModules,
+} from 'react-native';
 import ItemAdder from './ItemAdder';
 import ItemsList from './ItemList';
 
 const Screen = () => {
   const [items, setItems] = useState<string[]>([]);
+  const {CustomeModule} = NativeModules;
+ 
   return (
     <View style={styles.root}>
       <ItemAdder
-        onAddItem={(item) => {
+        onAddItem={item => {
           if (item.trim().length > 0 && !items.includes(item)) {
             setItems([...items, item]);
           }
         }}
         testID="adder"
       />
+      <TouchableOpacity
+        style={{alignItems: 'center'}}
+        onPress={() => {
+          CustomeModule.createEvent('testName', 'testLocation');
+        }}>
+        <Text>GET ALL DATA</Text>
+      </TouchableOpacity>
       <ItemsList
         data={items}
-        onDeleteItem={(item) => {
+        onDeleteItem={item => {
           const index = items.indexOf(item);
           setItems([
             ...items.slice(0, index),
