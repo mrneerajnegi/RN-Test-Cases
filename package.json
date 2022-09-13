@@ -10,6 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@invertase/react-native-apple-authentication": "https://github.com/invertase/react-native-apple-authentication",
+    "@react-native-community/google-signin": "^5.0.0",
     "@react-native-firebase/app": "^15.3.0",
     "@react-native-firebase/messaging": "^15.3.0",
     "@react-navigation/native": "^6.0.12",
@@ -17,6 +19,7 @@
     "axios": "^0.27.2",
     "react": "17.0.1",
     "react-native": "0.64.0",
+    "react-native-fbsdk-next": "^10.1.0",
     "react-native-flipper": "^0.156.0",
     "react-native-push-notification": "^8.1.1",
     "react-native-push-notification-popup": "^1.6.1",

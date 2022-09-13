@@ -7,12 +7,36 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:272899474695:android:4ada9f933a81ecc5fdf1a2",
+        "mobilesdk_app_id": "1:272899474695:android:855938e422804c85fdf1a2",
         "android_client_info": {
-          "package_name": "com.awesomeproject"
+          "package_name": "com.learningPhase.me"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "272899474695-k812b9mp1o588sutl6q8ejjunht6bsaa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.learningPhase.me",
+            "certificate_hash": "d719740a2a763919261777a942708abe16e884dc"
+          }
+        },
+        {
+          "client_id": "272899474695-njcdh5agiuafmgotedv79eandsqi28cn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.learningPhase.me",
+            "certificate_hash": "bd69b0e12bc93062eb1193fc38e11372e07c2a53"
+          }
+        },
+        {
+          "client_id": "272899474695-p8p5plcpt75j0o29118bui5h5l7u5vda.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.learningPhase.me",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
         {
           "client_id": "272899474695-nsaecofsun4uf6b7kt51qk3qavpsir40.apps.googleusercontent.com",
           "client_type": 3

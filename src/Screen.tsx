@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import ItemAdder from './ItemAdder';
 import ItemsList from './ItemList';
+import navigationService from './Navigation/navigationService';
 
 const Screen = () => {
   const [items, setItems] = useState<string[]>([]);
@@ -29,6 +30,13 @@ const Screen = () => {
           CustomeModule.createEvent('testName', 'testLocation');
         }}>
         <Text>GET ALL DATA</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{alignItems: 'center'}}
+        onPress={() => {
+         navigationService.navigate("Screen1")
+        }}>
+        <Text>Screen 1</Text>
       </TouchableOpacity>
       <ItemsList
         data={items}

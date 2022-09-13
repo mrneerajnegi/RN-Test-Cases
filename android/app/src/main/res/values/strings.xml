@@ -2,4 +2,8 @@
     <string name="app_name">AwesomeProject</string>
     <string name="default_notification_channel_id">ASASASSASASS</string>
     <!-- <string name="google_api_key">{{Your Google maps API Key Here}}</string> -->
+    <string name="facebook_app_id">763300551600160</string>
+<string name="fb_login_protocol_scheme">fb763300551600160</string>
+<string name="facebook_client_token">8ace5a80c945763598b3f6234accf80d</string>
+<!-- <string name="server_client_id">1054177806198-rlmb96lgdgpnqhl9scvd15e4evsi0486.apps.googleusercontent.com</string> -->
 </resources>
